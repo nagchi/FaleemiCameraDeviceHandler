@@ -186,15 +186,17 @@ def take() {
 def toggleAlarm() {
 	log.debug "Toggling Alarm"
 	if(device.currentValue("alarmStatus") == "on") {
+        log.debug "*** Toggling Alaram to OFF state"
     	alarmOff()
   	}
 	else {
+	log.debug "*** Toggling Alaram to ON state"	
     	alarmOn()
 	}
 }
 
 def alarmOn() {
-	log.debug "Enabling Alarm"
+    log.debug "Enabling Alarm"
     sendEvent(name: "alarmStatus", value: "on");
     if(hdcamera == true) {
        hubGet("cmd=setMotionDetectConfig&isEnable=1")
@@ -222,14 +224,17 @@ def toggleLED() {
   log.debug("Toggle LED")
 
   if(device.currentValue("ledStatus") == "auto") {
+    log.debug("*** Turning LED ON")
     ledOn()
   }
 
   else if(device.currentValue("ledStatus") == "on") {
+    log.debug("*** Turning LED OFF")
     ledOff()
   }
   
   else {
+    log.debug("*** Setting LED to AUTO")	  
     ledAuto()
   }
 }
@@ -441,7 +446,7 @@ private hubGet(def apiCommand) {
 
 //Parse events into attributes
 def parse(String description) {
-	log.debug "Parsing '${description}'"
+    log.debug "*** Parsing '${description}'"
     
     def map = [:]
     def retResult = []
@@ -456,28 +461,38 @@ def parse(String description) {
     else if (descMap["headers"] && descMap["body"]) {
         def body = new String(descMap["body"].decodeBase64())
         if(hdcamera == true) {
+	    log.debug "*** BODY:  $body"
+	    log.debug "*** Before calling XmlSlurper"
             def langs = new XmlSlurper().parseText(body)
+	    log.debug "*** After calling XmlSlurper"
+	
+            //new - nagchi
+	    //log.debug "Before calling XmlSlurper"
+            //def parser = new XmlSlurper() 
+            //parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
+            //def langs = parser.parseText(body)
+
 
             def motionAlarm = "$langs.isEnable"
             def ledMode = "$langs.mode"
 
             //Get Motion Alarm Status
             if(motionAlarm == "0") {
-                log.info("Polled: Alarm Off")
+                log.info("*** Polled: Alarm Off")
                 sendEvent(name: "alarmStatus", value: "off");
             }
             else if(motionAlarm == "1") {
-                log.info("Polled: Alarm On")
+                log.info("*** Polled: Alarm On")
                 sendEvent(name: "alarmStatus", value: "on");
             }
 
             //Get IR LED Mode
             if(ledMode == "0") {
-                log.info("Polled: LED Mode Auto")
+                log.info("*** Polled: LED Mode Auto")
                 sendEvent(name: "ledStatus", value: "auto")
             }
             else if(ledMode == "1") {
-                log.info("Polled: LED Mode Manual")
+                log.info("*** Polled: LED Mode Manual")
                 sendEvent(name: "ledStatus", value: "manual")
             }
     	}
