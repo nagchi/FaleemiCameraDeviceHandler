@@ -4,8 +4,9 @@
  *  Copyright 2014 skp19
  *
  *  modified 2015-06-04 :  thrash99er  - changed bool comparsions from string to bool  i.e.  "true" to true
- *
+ *  modified 2018-08-16 :  nagchi - Debug messages to get work with Faleemi IP Camera
  * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
  *
