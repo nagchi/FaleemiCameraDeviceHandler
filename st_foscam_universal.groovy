@@ -4,7 +4,7 @@
  *  Copyright 2014 skp19
  *
  *  modified 2015-06-04 :  thrash99er  - changed bool comparsions from string to bool  i.e.  "true" to true
- *  modified 2018-08-16 :  nagchi - Debug messages to get work with Faleemi IP Camera
+ *  modified 2018-08-16 :  nagchi - changed few more "ture" to true. Debug messages to get work with Faleemi IP Camera
  * 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -248,7 +248,7 @@ def ledOn() {
 def ledOff() {
     log.debug("LED changed to: off")
     sendEvent(name: "ledStatus", value: "off");
-    if(hdcamera == "true") {
+    if(hdcamera == true) {
     	delayBetween([hubGet("cmd=setInfraLedConfig&mode=1"), hubGet("cmd=closeInfraLed")])
     }
     else {
@@ -334,11 +334,11 @@ def stopCruise() {
 
 //PTZ CONTROLS
 def left() {
-	if(hdcamera == "true") {
+	if(hdcamera == true) {
 		delayBetween([hubGet("cmd=ptzMoveLeft"), hubGet("cmd=ptzStopRun")])
     }
     else {
-    	if(mirror == "true") {
+    	if(mirror == true) {
 	    	hubGet("/decoder_control.cgi?command=4&onestep=1&")
         }
         else {
@@ -348,11 +348,11 @@ def left() {
 }
 
 def right() {
-	if(hdcamera == "true") {
+	if(hdcamera == true) {
 		delayBetween([hubGet("cmd=ptzMoveRight"), hubGet("cmd=ptzStopRun")])
     }
     else {
-    	if(mirror == "true") {
+    	if(mirror == true) {
 	    	hubGet("/decoder_control.cgi?command=6&onestep=1&")
         }
         else {
