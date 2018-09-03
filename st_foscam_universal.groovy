@@ -6,7 +6,8 @@
  *  modified 2015-06-04 :  thrash99er  - changed bool comparsions from string to bool  i.e.  "true" to true
  *  modified 2018-09-03 :  nagchi - added support to set motion sensitivity, zone, days, options, etc.
  * 
- *
+ *  For more camera commands refer to: https://www.foscam.es/descarga/Foscam-IPCamera-CGI-User-Guide-AllPlatforms-2015.11.06.pdf
+ 
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
  *
