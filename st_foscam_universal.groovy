@@ -4,7 +4,7 @@
  *  Copyright 2014 skp19
  *
  *  modified 2015-06-04 :  thrash99er  - changed bool comparsions from string to bool  i.e.  "true" to true
- *  modified 2018-08-16 :  nagchi - changed few more "ture" to true. Debug messages to get work with Faleemi IP Camera
+ *  modified 2018-09-03 :  nagchi - added support to set motion sensitivity, zone, days, options, etc.
  * 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -18,36 +18,36 @@
  * 
  */
 metadata {
-	definition (name: "Foscam Universal Device - v2", namespace: "skp19", author: "skp19") {
-		capability "Polling"
-		capability "Image Capture"
+    definition (name: "Foscam Universal Device", namespace: "skp19", author: "skp19") {
+	capability "Polling"
+	capability "Image Capture"
         
         attribute "alarmStatus", "string"
         attribute "ledStatus",   "string"
         attribute "hubactionMode", "string"
     
-		command "alarmOn"
-		command "alarmOff"
-		command "toggleAlarm"
-		command "toggleLED"
+	command "alarmOn"
+	command "alarmOff"
+	command "toggleAlarm"
+	command "toggleLED"
         
-		command "ledOn"
-		command "ledOff"
-		command "ledAuto"
+	command "ledOn"
+	command "ledOff"
+	command "ledAuto"
         
-		command "left"
-		command "right"
-		command "up"
-		command "down"
+	command "left"
+	command "right"
+	command "up"
+	command "down"
         
-		command "cruisemap1"
-		command "cruisemap2"
-		command "stopCruise"
+	command "cruisemap1"
+	command "cruisemap2"
+	command "stopCruise"
         
-		command "preset1"
-		command "preset2"
-		command "preset3"
-	}
+	command "preset1"
+	command "preset2"
+	command "preset3"
+    }
     
     preferences {
         input("ip", "string", title:"Camera IP Address", description: "Camera IP Address", required: true, displayDuringSetup: true)
@@ -57,14 +57,14 @@ metadata {
         input("hdcamera", "bool", title:"HD Foscam Camera? (9xxx Series)", description: "Type of Foscam Camera", required: true, displayDuringSetup: true)
         input("mirror", "bool", title:"Mirror? (Not required for HD cameras)", description: "Camera Mirrored?")
         input("flip", "bool", title:"Flip? (Not required for HD cameras)", description: "Camera Flipped?")
-		input("preset1", "text", title: "Preset 1 (For HD cameras only)", description: "Name of your first preset position")
-		input("preset2", "text", title: "Preset 2 (For HD cameras only)", description: "Name of your second preset position")
-		input("preset3", "text", title: "Preset 3 (For HD cameras only)", description: "Name of your third preset position")
-		input("cruisemap1", "text", title: "Cruise Map 1 (For HD cameras only. Non-HD cameras will default to Horizontal.)", description: "Name of your first cruise map", defaultValue: "Horizontal")
-		input("cruisemap2", "text", title: "Cruise Map 2 (For HD cameras only. Non-HD cameras will default to Vertical.)", description: "Name of your second cruise map", defaultValue: "Vertical")
-	}
+	input("preset1", "text", title: "Preset 1 (For HD cameras only)", description: "Name of your first preset position")
+	input("preset2", "text", title: "Preset 2 (For HD cameras only)", description: "Name of your second preset position")
+	input("preset3", "text", title: "Preset 3 (For HD cameras only)", description: "Name of your third preset position")
+	input("cruisemap1", "text", title: "Cruise Map 1 (For HD cameras only. Non-HD cameras will default to Horizontal.)", description: "Name of your first cruise map", defaultValue: "Horizontal")
+	input("cruisemap2", "text", title: "Cruise Map 2 (For HD cameras only. Non-HD cameras will default to Vertical.)", description: "Name of your second cruise map", defaultValue: "Vertical")
+    }
 
-	tiles {
+    tiles {
         carouselTile("cameraDetails", "device.image", width: 3, height: 2) { }
 
         standardTile("camera", "device.alarmStatus", width: 1, height: 1, canChangeIcon: true, inactiveLabel: true, canChangeBackground: true) {
@@ -72,11 +72,11 @@ metadata {
           state "on", label: "on", action: "toggleAlarm", icon: "st.camera.dropcam-centered",  backgroundColor: "#53A7C0"
         }
 
-		standardTile("take", "device.image", width: 1, height: 1, canChangeIcon: false, inactiveLabel: true, canChangeBackground: false) {
-			state "take", label: "Take", action: "Image Capture.take", icon: "st.camera.camera", backgroundColor: "#FFFFFF", nextState:"taking"
-			state "taking", label:'Taking', action: "", icon: "st.camera.take-photo", backgroundColor: "#53a7c0"
-			state "image", label: "Take", action: "Image Capture.take", icon: "st.camera.camera", backgroundColor: "#FFFFFF", nextState:"taking"
-		}
+	standardTile("take", "device.image", width: 1, height: 1, canChangeIcon: false, inactiveLabel: true, canChangeBackground: false) {
+	    state "take", label: "Take", action: "Image Capture.take", icon: "st.camera.camera", backgroundColor: "#FFFFFF", nextState:"taking"
+	    state "taking", label:'Taking', action: "", icon: "st.camera.take-photo", backgroundColor: "#53a7c0"
+	    state "image", label: "Take", action: "Image Capture.take", icon: "st.camera.camera", backgroundColor: "#FFFFFF", nextState:"taking"
+	}
 
         standardTile("alarmStatus", "device.alarmStatus", width: 1, height: 1, canChangeIcon: false, inactiveLabel: true, canChangeBackground: false) {
           state "off", label: "off", action: "toggleAlarm", icon: "st.quirky.spotter.quirky-spotter-sound-off", backgroundColor: "#FFFFFF"
@@ -111,49 +111,49 @@ metadata {
           state "manual", label: "off", action: "ledOff", icon: "st.Lighting.light13", backgroundColor: "#00FF00"
         }
         
-		standardTile("preset1", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "preset1", label: "preset 1", action: "preset1", icon: ""
-		}
+	standardTile("preset1", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "preset1", label: "preset 1", action: "preset1", icon: ""
+	}
 
-		standardTile("preset2", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "preset2", label: "preset 2", action: "preset2", icon: ""
-		}
+	standardTile("preset2", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "preset2", label: "preset 2", action: "preset2", icon: ""
+	}
 
-		standardTile("preset3", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "preset3", label: "preset 3", action: "preset3", icon: ""
-		}
+	standardTile("preset3", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "preset3", label: "preset 3", action: "preset3", icon: ""
+	}
         
-		standardTile("cruisemap1", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "cruisemap1", label: "Cruise Map 1", action: "cruisemap1", icon: ""
-		}
+	standardTile("cruisemap1", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "cruisemap1", label: "Cruise Map 1", action: "cruisemap1", icon: ""
+	}
 
-		standardTile("cruisemap2", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "cruisemap2", label: "Cruise Map 2", action: "cruisemap2", icon: ""
-		}
+	standardTile("cruisemap2", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "cruisemap2", label: "Cruise Map 2", action: "cruisemap2", icon: ""
+	}
  
- 		standardTile("stopcruise", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "stopcruise", label: "Stop Cruise", action: "stopCruise", icon: ""
-		}
+	standardTile("stopcruise", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "stopcruise", label: "Stop Cruise", action: "stopCruise", icon: ""
+	}
 
-		standardTile("left", "device.image", width: 1, height: 1, canChangeIcon: false,  canChangeBackground: false, decoration: "flat") {
-			state "left", label: "left", action: "left", icon: ""
-		}
+	standardTile("left", "device.image", width: 1, height: 1, canChangeIcon: false,  canChangeBackground: false, decoration: "flat") {
+	    state "left", label: "left", action: "left", icon: ""
+	}
 
-		standardTile("right", "device.image", width: 1, height: 1, canChangeIcon: false,  canChangeBackground: false, decoration: "flat") {
-			state "right", label: "right", action: "right", icon: ""
-		}
+	standardTile("right", "device.image", width: 1, height: 1, canChangeIcon: false,  canChangeBackground: false, decoration: "flat") {
+	    state "right", label: "right", action: "right", icon: ""
+	}
 
-		standardTile("up", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "up", label: "up", action: "up", icon: "st.thermostat.thermostat-up"
-		}
+	standardTile("up", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "up", label: "up", action: "up", icon: "st.thermostat.thermostat-up"
+	}
 
-		standardTile("down", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
-			state "down", label: "down", action: "down", icon: "st.thermostat.thermostat-down"
-		}
+	standardTile("down", "device.image", width: 1, height: 1, canChangeIcon: false, canChangeBackground: false, decoration: "flat") {
+	    state "down", label: "down", action: "down", icon: "st.thermostat.thermostat-down"
+	}
 
-		standardTile("stop", "device.image", width: 1, height: 1, canChangeIcon: false,  canChangeBackground: false, decoration: "flat") {
-			state "stop", label: "", action: "stopCruise", icon: "st.sonos.stop-btn"
-		}
+	standardTile("stop", "device.image", width: 1, height: 1, canChangeIcon: false,  canChangeBackground: false, decoration: "flat") {
+	    state "stop", label: "", action: "stopCruise", icon: "st.sonos.stop-btn"
+	}
 
         standardTile("refresh", "device.alarmStatus", inactiveLabel: false, decoration: "flat") {
           state "refresh", action:"polling.poll", icon:"st.secondary.refresh"
@@ -164,56 +164,83 @@ metadata {
         }
 
         main "camera"
-			//details(["cameraDetails", "take", "blank", "alarmStatus", "ledAuto", "ledOn", "ledOff", "refresh"]) //**Uncomment this line and comment out the next line to hide the PTZ controls
-			details(["cameraDetails", "take", "blank", "alarmStatus", "ledAuto", "ledOn", "ledOff", "preset1", "preset2", "preset3", "cruisemap1", "cruisemap2", "stopcruise", "blank", "up", "blank", "left", "stop", "right", "blank", "down", "blank", "refresh"])
-	}
+	    //details(["cameraDetails", "take", "blank", "alarmStatus", "ledAuto", "ledOn", "ledOff", "refresh"]) //**Uncomment this line and comment out the next line to hide the PTZ controls
+	    details(["cameraDetails", "take", "blank", "alarmStatus", "ledAuto", "ledOn", "ledOff", "preset1", "preset2", "preset3", "cruisemap1", "cruisemap2", "stopcruise", "blank", "up", "blank", "left", "stop", "right", "blank", "down", "blank", "refresh"])
+    }
 }
 
 //TAKE PICTURE
 def take() {
-	log.debug("Taking Photo")
-	sendEvent(name: "hubactionMode", value: "s3");
+    log.debug("Taking Photo")
+    sendEvent(name: "hubactionMode", value: "s3");
     if(hdcamera == true) {
-		hubGet("cmd=snapPicture2")
+	hubGet("cmd=snapPicture2")
     }
     else {
-    	hubGet("/snapshot.cgi?")
+	hubGet("/snapshot.cgi?")
     }
 }
 //END TAKE PICTURE
 
 //ALARM ACTIONS
 def toggleAlarm() {
-	log.debug "Toggling Alarm"
-	if(device.currentValue("alarmStatus") == "on") {
-        log.debug "*** Toggling Alaram to OFF state"
-    	alarmOff()
-  	}
-	else {
-	log.debug "*** Toggling Alaram to ON state"	
-    	alarmOn()
-	}
+    log.debug "Toggling Alarm"
+    if(device.currentValue("alarmStatus") == "on") {
+	alarmOff()
+    }
+    else {
+	alarmOn()
+    }
 }
 
 def alarmOn() {
     log.debug "Enabling Alarm"
     sendEvent(name: "alarmStatus", value: "on");
     if(hdcamera == true) {
-       hubGet("cmd=setMotionDetectConfig&isEnable=1")
-    }
-    else {
-    	hubGet("/set_alarm.cgi?motion_armed=1&")
-    }
+        /*
+         * snapInterval: uses set value
+         *
+         * Motion Sensitivity: 0-9:high-low
+         * 0:Low, 1:Normal (Medium), 2:High, 3:Lower, 4:Lowest
+         *
+         * linkage: bits  7:push message to phone, 6:Record to cloud, 5:Snap to cloud, 4:IO out,
+         *                3:record                 2:snap picture     1:send mail      0:camera sound
+         *
+         * triggerInterval: Auto adds 5 to set value
+         *
+         * isMovAlarmEnable: 0:Diable 1:Enable (Motion disable/enable)
+         *
+         * isPirAlarmEnable: 0:Diable 1:Enable (PIR disable/enable)
+         */
+        //delayBetween([hubGet("cmd=setMotionDetectConfig&isEnable=1&snapInterval=1&sensitivity=${getMotionLevel(motionLevel)}&linkage=${getMotionAlarmEvents()}&triggerInterval=${getReArmInterval("15s")}&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&${getDetectionArea(detectionArea)}&1421696056773"), hubGet("cmd=setAudioAlarmConfig&isEnable=${soundAlarm ? "1" : "0"}&sensitivity=0&linkage=${getMotionAlarmEvents()}&triggerInterval=${getReArmInterval("15s")}&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655"), poll()], delayInterval())
+        delayBetween([hubGet("cmd=setMotionDetectConfig&isEnable=1&snapInterval=1&sensitivity=1&linkage=15&triggerInterval=2&isMovAlarmEnable=0&isPirAlarmEnable=1&schedule0=281474976710655&schedule1=281474976710655&schedule2=281474976710655&schedule3=281474976710655&schedule4=281474976710655&schedule5=281474976710655&schedule6=281474976710655&${getDetectionArea(detectionArea)}&1421696056773"), poll()], 100)        
+   } else {
+	delayBetween([hubGet("/set_alarm.cgi?motion_armed=1&motion_sensitivity=${getMotionLevel(motionLevel)}&motion_compensation=${lightCompensation ? "1" : "0"}&sounddetect_enabled=${soundAlarm ? "1" : "0"}&sounddetect_sensitivity=9&mail=${motionEMail ? "1" : "0"}&upload_interval=${motionSnap ? "1" : "0"}&"), poll()], 100)
+   }
 }
 
 def alarmOff() {
-	log.debug "Disabling Alarm"
+    log.debug "Disabling Alarm"
     sendEvent(name: "alarmStatus", value: "off");
     if(hdcamera == true) {
-		hubGet("cmd=setMotionDetectConfig&isEnable=0")
+	//delayBetween([hubGet("cmd=setMotionDetectConfig&isEnable=0"), hubGet("cmd=setAudioAlarmConfig&isEnable=0"), poll()], delayInterval())
+        delayBetween([hubGet("cmd=setMotionDetectConfig&isEnable=0"), hubGet("cmd=setAudioAlarmConfig&isEnable=0"), poll()], 100)
     }
     else {
-    	hubGet("/set_alarm.cgi?motion_armed=0&")
+	delayBetween([hubGet("/set_alarm.cgi?motion_armed=0&sounddetect_enabled=0&"), poll()], delayInterval())
+    }   
+}
+
+private String getDetectionArea(area) {
+    log.debug "User entered detection:$area"
+    
+    if (area?.trim()) {
+	// Remove any trailing or leading & if entered accidentally
+        area = area.replaceAll("^&+", "")  // Leading &
+	area = area.replaceAll("&+\$", "") // Trailing &
+        return area
+    } else {
+	return "area0=1023&area1=1023&area2=1023&area3=1023&area4=1023&area5=1023&area6=1023&area7=1023&area8=1023&area9=1023" // Default is full frame detection
     }
 }
 //END ALARM ACTIONS
@@ -224,17 +251,14 @@ def toggleLED() {
   log.debug("Toggle LED")
 
   if(device.currentValue("ledStatus") == "auto") {
-    log.debug("*** Turning LED ON")
     ledOn()
   }
 
   else if(device.currentValue("ledStatus") == "on") {
-    log.debug("*** Turning LED OFF")
     ledOff()
   }
   
   else {
-    log.debug("*** Setting LED to AUTO")	  
     ledAuto()
   }
 }
@@ -243,10 +267,10 @@ def ledOn() {
     log.debug("LED changed to: on")
     sendEvent(name: "ledStatus", value: "on");
     if(hdcamera == true) {
-	    delayBetween([hubGet("cmd=setInfraLedConfig&mode=1"), hubGet("cmd=openInfraLed")])
+        delayBetween([hubGet("cmd=setInfraLedConfig&mode=1"), hubGet("cmd=openInfraLed")], 100)
     }
     else {
-    	hubGet("/decoder_control.cgi?command=95&")
+	hubGet("/decoder_control.cgi?command=95&")
     }
 }
 
@@ -254,142 +278,142 @@ def ledOff() {
     log.debug("LED changed to: off")
     sendEvent(name: "ledStatus", value: "off");
     if(hdcamera == true) {
-    	delayBetween([hubGet("cmd=setInfraLedConfig&mode=1"), hubGet("cmd=closeInfraLed")])
+	delayBetween([hubGet("cmd=setInfraLedConfig&mode=1"), hubGet("cmd=closeInfraLed")], 100)
     }
     else {
-    	hubGet("/decoder_control.cgi?command=94&")
+	hubGet("/decoder_control.cgi?command=94&")
     }
 }
 
 def ledAuto() {
     log.debug("LED changed to: auto")
     sendEvent(name: "ledStatus", value: "auto");
-	if(hdcamera == true) {
-		hubGet("cmd=setInfraLedConfig&mode=0")
+    if(hdcamera == true) {
+	hubGet("cmd=setInfraLedConfig&mode=0")
     }
     else {
-    	hubGet("/decoder_control.cgi?command=95&")
+	hubGet("/decoder_control.cgi?command=95&")
     }
 }
 //END LED ACTIONS
 
 //PRESET ACTIONS
 def preset1() {
-	log.debug("Preset 1 Selected - ${preset1}")
-	if(hdcamera == true) {
-		hubGet("cmd=ptzGotoPresetPoint&name=${preset1}")
+    log.debug("Preset 1 Selected - ${preset1}")
+    if(hdcamera == true) {
+	hubGet("cmd=ptzGotoPresetPoint&name=${preset1}")
     }
     else {
-    	hubGet("/decoder_control.cgi?command=31&")
+	hubGet("/decoder_control.cgi?command=31&")
     }
 }
 
 def preset2() {
-	log.debug("Preset 2 Selected - ${preset2}")
-	if(hdcamera == true) {
-		hubGet("cmd=ptzGotoPresetPoint&name=${preset2}")
+    log.debug("Preset 2 Selected - ${preset2}")
+    if(hdcamera == true) {
+	hubGet("cmd=ptzGotoPresetPoint&name=${preset2}")
     }
     else {
-    	hubGet("/decoder_control.cgi?command=33&")
+	hubGet("/decoder_control.cgi?command=33&")
     }
 }
 
 def preset3() {
-	log.debug("Preset 3 Selected - ${preset3}")
-	if(hdcamera == true) {
-		hubGet("cmd=ptzGotoPresetPoint&name=${preset3}")
+    log.debug("Preset 3 Selected - ${preset3}")
+    if(hdcamera == true) {
+	hubGet("cmd=ptzGotoPresetPoint&name=${preset3}")
     }
     else {
-    	hubGet("/decoder_control.cgi?command=35&")
+	hubGet("/decoder_control.cgi?command=35&")
     }
 }
 //END PRESET ACTIONS
 
 //CRUISE ACTIONS
 def cruisemap1() {
-	log.debug("Cruise Map 1 Selected - ${cruisemap1}")
-	if(hdcamera == true) {
-		hubGet("cmd=ptzStartCruise&mapName=${cruisemap1}")
+    log.debug("Cruise Map 1 Selected - ${cruisemap1}")
+    if(hdcamera == true) {
+	hubGet("cmd=ptzStartCruise&mapName=${cruisemap1}")
     }
     else {
-    	hubGet("/decoder_control.cgi?command=28&")
+	hubGet("/decoder_control.cgi?command=28&")
     }
 }
 
 def cruisemap2() {
-	log.debug("Cruise Map 2 Selected - ${cruisemap2}")
-	if(hdcamera == true) {
-		hubGet("cmd=ptzStartCruise&mapName=${cruisemap2}")
+    log.debug("Cruise Map 2 Selected - ${cruisemap2}")
+    if(hdcamera == true) {
+	hubGet("cmd=ptzStartCruise&mapName=${cruisemap2}")
     }
     else {
-    	hubGet("/decoder_control.cgi?command=26&")
+	hubGet("/decoder_control.cgi?command=26&")
     }
 }
 
 def stopCruise() {
-	log.debug("Stop Cruise")
-	if(hdcamera == true) {
-		hubGet("cmd=ptzStopRun")
+    log.debug("Stop Cruise")
+    if(hdcamera == true) {
+	hubGet("cmd=ptzStopRun")
     }
     else {
-    	delayBetween([hubGet("/decoder_control.cgi?command=29&"), hubGet("/decoder_control.cgi?command=27&")])
+	delayBetween([hubGet("/decoder_control.cgi?command=29&"), hubGet("/decoder_control.cgi?command=27&")], 100)
     }
 }
 //END CRUISE ACTIONS
 
 //PTZ CONTROLS
 def left() {
-	if(hdcamera == true) {
-		delayBetween([hubGet("cmd=ptzMoveLeft"), hubGet("cmd=ptzStopRun")])
+    if(hdcamera == true) {
+	delayBetween([hubGet("cmd=ptzMoveLeft"), hubGet("cmd=ptzStopRun")], 100)
     }
     else {
-    	if(mirror == true) {
-	    	hubGet("/decoder_control.cgi?command=4&onestep=1&")
+	if(mirror == true) {
+	    hubGet("/decoder_control.cgi?command=4&onestep=1&")
         }
         else {
-        	hubGet("/decoder_control.cgi?command=6&onestep=1&")
+	    hubGet("/decoder_control.cgi?command=6&onestep=1&")
         }
     }
 }
 
 def right() {
-	if(hdcamera == true) {
-		delayBetween([hubGet("cmd=ptzMoveRight"), hubGet("cmd=ptzStopRun")])
+    if(hdcamera == true) {
+	delayBetween([hubGet("cmd=ptzMoveRight"), hubGet("cmd=ptzStopRun")], 100)
     }
     else {
-    	if(mirror == true) {
-	    	hubGet("/decoder_control.cgi?command=6&onestep=1&")
+	if(mirror == true) {
+	    hubGet("/decoder_control.cgi?command=6&onestep=1&")
         }
         else {
-        	hubGet("/decoder_control.cgi?command=4&onestep=1&")
+	    hubGet("/decoder_control.cgi?command=4&onestep=1&")
         }
     }
 }
 
 def up() {
-	if(hdcamera == true) {
-        delayBetween([hubGet("cmd=ptzMoveUp"), hubGet("cmd=ptzStopRun")])
+    if(hdcamera == true) {
+        delayBetween([hubGet("cmd=ptzMoveUp"), hubGet("cmd=ptzStopRun")], 100)
     }
     else {
-    	if(flip == true) {
-	    	hubGet("/decoder_control.cgi?command=2&onestep=1&")
+	if(flip == true) {
+	    hubGet("/decoder_control.cgi?command=2&onestep=1&")
         }
         else {
-        	hubGet("/decoder_control.cgi?command=0&onestep=1&")
+	    hubGet("/decoder_control.cgi?command=0&onestep=1&")
         }
     }
 }
 
 def down() {
-	if(hdcamera == true) {
-        delayBetween([hubGet("cmd=ptzMoveDown"), hubGet("cmd=ptzStopRun")])
+    if(hdcamera == true) {
+        delayBetween([hubGet("cmd=ptzMoveDown"), hubGet("cmd=ptzStopRun")], 100)
     }
     else {
-    	if(flip == true) {
-    		hubGet("/decoder_control.cgi?command=0&onestep=1&")
+	if(flip == true) {
+	    hubGet("/decoder_control.cgi?command=0&onestep=1&")
         }
         else {
-        	hubGet("/decoder_control.cgi?command=2&onestep=1&")
+	    hubGet("/decoder_control.cgi?command=2&onestep=1&")
         }
     }
 }
@@ -397,43 +421,43 @@ def down() {
 
 def poll() {
 
-	sendEvent(name: "hubactionMode", value: "local");
+    sendEvent(name: "hubactionMode", value: "local");
     //Poll Motion Alarm Status and IR LED Mode
     if(hdcamera == true) {
-		delayBetween([hubGet("cmd=getMotionDetectConfig"), hubGet("cmd=getInfraLedConfig")])
+	delayBetween([hubGet("cmd=getMotionDetectConfig"), hubGet("cmd=getInfraLedConfig")], 100)
     }
     else {
-    	hubGet("/get_params.cgi?")
+	hubGet("/get_params.cgi?")
     }
 }
 
 private getLogin() {
-	if(hdcamera == true) {
-    	return "usr=${username}&pwd=${password}&"
+    if(hdcamera == true) {
+	return "usr=${username}&pwd=${password}&"
     }
     else {
-    	return "user=${username}&pwd=${password}"
+	return "user=${username}&pwd=${password}"
     }
 }
 
 private hubGet(def apiCommand) {
-	//Setting Network Device Id
+    //Setting Network Device Id
     def iphex = convertIPtoHex(ip)
     def porthex = convertPortToHex(port)
     device.deviceNetworkId = "$iphex:$porthex"
     log.debug "Device Network Id set to ${iphex}:${porthex}"
 
-	log.debug("Executing hubaction on " + getHostAddress())
+    log.debug("Executing hubaction on " + getHostAddress())
     def uri = ""
     if(hdcamera == true) {
-    	uri = "/cgi-bin/CGIProxy.fcgi?" + getLogin() + apiCommand
-	}
+        uri = "/cgi-bin/CGIProxy.fcgi?" + getLogin() + apiCommand
+    }
     else {
-    	uri = apiCommand + getLogin()
+	uri = apiCommand + getLogin()
     }
     log.debug uri
     def hubAction = new physicalgraph.device.HubAction(
-    	method: "GET",
+	method: "GET",
         path: uri,
         headers: [HOST:getHostAddress()]
     )
@@ -441,103 +465,93 @@ private hubGet(def apiCommand) {
         hubAction.options = [outputMsgToS3:true]
         sendEvent(name: "hubactionMode", value: "local");
     }
-	hubAction
+    sendHubCommand(hubAction)
 }
 
 //Parse events into attributes
 def parse(String description) {
-    log.debug "*** Parsing '${description}'"
+    log.debug "Parsing '${description}'"
     
     def map = [:]
     def retResult = []
     def descMap = parseDescriptionAsMap(description)
         
     //Image
-	if (descMap["bucket"] && descMap["key"]) {
-		putImageInS3(descMap)
-	}
+    if (descMap["bucket"] && descMap["key"]) {
+	putImageInS3(descMap)
+    }
 
-	//Status Polling
+    //Status Polling
     else if (descMap["headers"] && descMap["body"]) {
         def body = new String(descMap["body"].decodeBase64())
         if(hdcamera == true) {
-	    log.debug "*** BODY:  $body"
-	    log.debug "*** Before calling XmlSlurper"
             def langs = new XmlSlurper().parseText(body)
-	    log.debug "*** After calling XmlSlurper"
-	
-            //new - nagchi
-	    //log.debug "Before calling XmlSlurper"
-            //def parser = new XmlSlurper() 
-            //parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
-            //def langs = parser.parseText(body)
-
 
             def motionAlarm = "$langs.isEnable"
             def ledMode = "$langs.mode"
 
             //Get Motion Alarm Status
             if(motionAlarm == "0") {
-                log.info("*** Polled: Alarm Off")
+                log.info("Polled: Alarm Off")
                 sendEvent(name: "alarmStatus", value: "off");
             }
             else if(motionAlarm == "1") {
-                log.info("*** Polled: Alarm On")
+                log.info("Polled: Alarm On")
                 sendEvent(name: "alarmStatus", value: "on");
             }
 
             //Get IR LED Mode
             if(ledMode == "0") {
-                log.info("*** Polled: LED Mode Auto")
+                log.info("Polled: LED Mode Auto")
                 sendEvent(name: "ledStatus", value: "auto")
             }
             else if(ledMode == "1") {
-                log.info("*** Polled: LED Mode Manual")
+                log.info("Polled: LED Mode Manual")
                 sendEvent(name: "ledStatus", value: "manual")
             }
-    	}
+	}
         else {
-        	if(body.find("alarm_motion_armed=0")) {
-				log.info("Polled: Alarm Off")
+	    if(body.find("alarm_motion_armed=0")) {
+		log.info("Polled: Alarm Off")
                 sendEvent(name: "alarmStatus", value: "off")
             }
-        	else if(body.find("alarm_motion_armed=1")) {
-				log.info("Polled: Alarm On")
+	    else if(body.find("alarm_motion_armed=1")) {
+		log.info("Polled: Alarm On")
                 sendEvent(name: "alarmStatus", value: "on")
             }
             //The API does not provide a way to poll for LED status on 8xxx series at the moment
         }
-	}
+    }
 }
 
 def parseDescriptionAsMap(description) {
-	description.split(",").inject([:]) { map, param ->
-		def nameAndValue = param.split(":")
-		map += [(nameAndValue[0].trim()):nameAndValue[1].trim()]
-	}
+    description.split(",").inject([:]) { map, param ->
+	def nameAndValue = param.split(":")
+	map += [(nameAndValue[0].trim()):nameAndValue[1].trim()]
+    }
 }
 
 def putImageInS3(map) {
 
-	def s3ObjectContent
+    def s3ObjectContent
 
-	try {
-		def imageBytes = getS3Object(map.bucket, map.key + ".jpg")
+    try {
+	def imageBytes = getS3Object(map.bucket, map.key + ".jpg")
 
-		if(imageBytes)
-		{
-			s3ObjectContent = imageBytes.getObjectContent()
-			def bytes = new ByteArrayInputStream(s3ObjectContent.bytes)
-			storeImage(getPictureName(), bytes)
-		}
+	if(imageBytes)
+	{
+	    s3ObjectContent = imageBytes.getObjectContent()
+	    def bytes = new ByteArrayInputStream(s3ObjectContent.bytes)
+	    storeImage(getPictureName(), bytes)
 	}
-	catch(Exception e) {
-		log.error e
-	}
-	finally {
-		//Explicitly close the stream
-		if (s3ObjectContent) { s3ObjectContent.close() }
-	}
+    }
+    catch(Exception e) {
+	log.error e
+    }
+    finally {
+	//Explicitly close the stream
+	if (s3ObjectContent) { s3ObjectContent.close() }
+    }
 }
 
 private getPictureName() {
@@ -546,7 +560,7 @@ private getPictureName() {
 }
 
 private getHostAddress() {
-	return "${ip}:${port}"
+    return "${ip}:${port}"
 }
 
 private String convertIPtoHex(ipAddress) { 
@@ -556,6 +570,6 @@ private String convertIPtoHex(ipAddress) {
 }
 
 private String convertPortToHex(port) {
-	String hexport = port.toString().format( '%04x', port.toInteger() )
+    String hexport = port.toString().format( '%04x', port.toInteger() )
     return hexport
 }
