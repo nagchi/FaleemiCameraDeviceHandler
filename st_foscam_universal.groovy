@@ -4,7 +4,8 @@
  *  Copyright 2014 skp19
  *
  *  modified 2015-06-04 :  thrash99er  - changed bool comparsions from string to bool  i.e.  "true" to true
- *  modified 2018-09-03 :  nagchi - added support to set motion sensitivity, zone, days, options, etc.
+ *  modified 2018-09-03 :  nagchi - added code from nickb512 from smartthings community posts.
+                                    added support to set motion sensitivity, zone, days, options, etc.
  * 
  *  For more camera commands refer to: https://www.foscam.es/descarga/Foscam-IPCamera-CGI-User-Guide-AllPlatforms-2015.11.06.pdf
  
